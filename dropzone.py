@@ -13,22 +13,24 @@ def predicters():
             ExtractPersonalInformationPrompt(),
             ExtractEducationPrompt(),
             ExtractLanguagesPrompt(),
-        ],
-        model="google/gemma-1.1-7b-it",
-        temperature=0.2,
-        api_key=st.session_state['api_key']
-    ))
-
-    parser_jobs = Parser(parsing_strategy=HuggingFaceApiStrategy(
-        prompts=[
             ExtractJobsPrompt()
         ],
-        model="meta-llama/Meta-Llama-3-8B-Instruct",
-        temperature=0.2,
+        model="google/gemma-1.1-7b-it",
+        temperature=1.0,
         api_key=st.session_state['api_key']
     ))
 
-    return parser_non_jobs, parser_jobs
+    """
+    parser_jobs = Parser(parsing_strategy=HuggingFaceApiStrategy(
+        prompts=[
+        ],
+        model="meta-llama/Meta-Llama-3-8B",
+        temperature=1.0,
+        api_key=st.session_state['api_key']
+    ))
+    """
+
+    return parser_non_jobs, None
 
 
 def handle_uploaded_file(uploaded_file):
@@ -39,10 +41,13 @@ def handle_uploaded_file(uploaded_file):
 
         response_non_jobs = parser_non_jobs.parse(
             raw_pdf_text=raw_pdf_text).serialize()
+
+        """
         response_jobs = parser_jobs.parse(
             raw_pdf_text=raw_pdf_text).serialize()
 
         response_non_jobs.update({'jobs': response_jobs['jobs']})
+        """
 
         df_personal_information = pd.DataFrame(
             response_non_jobs['personal_information'], index=[0])

@@ -6,8 +6,6 @@ COPY ./dist ./dist
 
 COPY .env .
 
-COPY requirements.txt .
-
 RUN pip install ./dist/cv_parsing-0.0.1.tar.gz
 
 COPY . .
